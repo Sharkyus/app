@@ -1,0 +1,34 @@
+{
+  "name": "app-thumbs",
+  "version": "1.0.0",
+  "description": "Images thumbs wall",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --config config/webpack.base.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sharkyus/app-thumbs.git"
+  },
+  "author": "Sharkyus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sharkyus/app-thumbs/issues"
+  },
+  "homepage": "https://github.com/Sharkyus/app-thumbs#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.11",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "less-loader": "^4.1.0",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4",
+    "webpack-merge": "^4.1.3"
+  }
+}
