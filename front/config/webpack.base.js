@@ -4,9 +4,10 @@ module.exports = {
     mode: 'development',
     context: path.join(process.cwd(), 'src'),
     devtool: 'source-map',
-    entry: {
-        app: 'index.js'
-    },
+    entry: [
+        'babel-polyfill',
+        './index.js'
+    ],
     output: {
         path: path.join(process.cwd(), 'dist'),
         filename: '[name].[hash].js',
@@ -30,7 +31,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['stage-0', 'env']
+                        presets: ['es2015', 'stage-0']
                     }
                 }
             },
