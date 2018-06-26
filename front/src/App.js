@@ -1,4 +1,5 @@
 import Wall from "@/components/Wall";
+import ("styles/app.less");
 
 export default class App{
     constructor(selector){
