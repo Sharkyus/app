@@ -1,25 +1,24 @@
 const path = require('path');
-let HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    context: path.join(__dirname, 'src'),
+    context: path.join(process.cwd(), 'src'),
     devtool: 'source-map',
     entry: {
-        app: './index.js'
+        app: 'index.js'
     },
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(process.cwd(), 'dist'),
         filename: '[name].[hash].js',
         publicPath: '/',
         sourceMapFilename: '[name].map'
     },
     resolve: {
-        extensions: ['.js'],
-        modules: [path.join(__dirname, 'src'), 'node_modules'],
+        extensions: ['.js','.less','.css','.html'],
+        modules: [path.join(process.cwd(), 'src'), 'node_modules'],
         alias: {
-            '@': path.resolve(__dirname, "..", "src"),
-            '~': path.resolve(__dirname, "..", "src/templates")
+            '@': path.resolve(process.cwd(), "src"),
+            '~': path.resolve(process.cwd(), "src/templates")
         }
     },
 
@@ -31,7 +30,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['env']
+                        presets: ['stage-0', 'env']
                     }
                 }
             },
@@ -40,14 +39,17 @@ module.exports = {
                 use: {
                     loader: 'html-loader',
                 }
+            },
+            {
+                test: /\.less$/,
+                use: [{
+                    loader: 'style-loader' // creates style nodes from JS strings
+                }, {
+                    loader: 'css-loader' // translates CSS into CommonJS
+                }, {
+                    loader: 'less-loader' // compiles Less to CSS
+                }]
             }
         ],
-    },
-
-    devServer: {
-        // contentBase: path.join(__dirname, 'dist'),
-        port: 8080
-    },
-
-    plugins: [new HtmlWebpackPlugin({ template: 'index.html' })]
+    }
 };
