@@ -1,0 +1,25 @@
+{
+  "name": "app-thumbs",
+  "version": "1.0.0",
+  "description": "Images thumbs wall",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sharkyus/app-thumbs.git"
+  },
+  "author": "Sharkyus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sharkyus/app-thumbs/issues"
+  },
+  "homepage": "https://github.com/Sharkyus/app-thumbs#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql2": "^1.5.3",
+    "sequelize": "^4.38.0"
+  }
+}
