@@ -1,9 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
     context: path.join(process.cwd(), 'src'),
-    devtool: 'source-map',
     entry: [
         'babel-polyfill',
         './index.js'
@@ -15,11 +13,12 @@ module.exports = {
         sourceMapFilename: '[name].map'
     },
     resolve: {
-        extensions: ['.js','.less','.css','.html'],
-        modules: [path.join(process.cwd(), 'src'), 'node_modules'],
+        extensions: ['.js','.less','.css','.html','.json'],
+        modules: [path.join(process.cwd(), 'src'), path.join(process.cwd(), 'config'), 'node_modules'],
         alias: {
             '@': path.resolve(process.cwd(), "src"),
-            '~': path.resolve(process.cwd(), "src/templates")
+            '~': path.resolve(process.cwd(), "src/templates"),
+            '#': path.resolve(process.cwd(), "config")
         }
     },
 

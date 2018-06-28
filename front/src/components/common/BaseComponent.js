@@ -16,7 +16,6 @@ export default class BaseComponent{
         Object.assign(this, data);
 
         this._checkProps();
-        console.log(this.data);
         this.render();
     }
     _checkProps(){
@@ -29,5 +28,6 @@ export default class BaseComponent{
         wrapper.innerHTML = _.template(this.template)(this.data || {});
         this.$el = wrapper.firstChild;
         this.renderTo.appendChild(this.$el);
+        this.rendered && (this.rendered());
     }
 }
