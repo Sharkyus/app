@@ -19,7 +19,12 @@
   "homepage": "https://github.com/Sharkyus/app-thumbs#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "free-google-image-search": "^1.0.0",
+    "google-images": "^2.1.0",
     "mysql2": "^1.5.3",
-    "sequelize": "^4.38.0"
+    "request": "^2.87.0",
+    "sequelize": "^4.38.0",
+    "sharp": "^0.20.5",
+    "uuid": "^3.3.0"
   }
 }
