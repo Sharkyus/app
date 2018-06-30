@@ -12,8 +12,8 @@ const errors = [
 ];
 
 export default class BaseComponent{
-    constructor(data){
-        Object.assign(this, data);
+    constructor(options){
+        Object.assign(this, options);
 
         this._checkProps();
         this.render();

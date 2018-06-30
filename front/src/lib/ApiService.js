@@ -17,18 +17,18 @@ export default class ApiService{
         }
         return xmlhttp;
     }
-    static send(url, options={}, data={}){
-        return new Promise((res,rej)=>{
+    static send(url, options={}, data={}) {
+        return new Promise((res, rej) => {
             let req = ApiService._getXmlHttp();
             req.open(options.method, `${config.server}/api${url}`, true);
-            req.onreadystatechange = function() {
+            req.onreadystatechange = () => {
                 if (req.readyState === 4) {
-                    if(req.status === 200) {
-                        res();
+                    if (req.status === 200) {
+                        res(JSON.parse(req.responseText));
                     }
                 }
             };
-            req.send(null);
+            req.send(data);
         });
     }
 }
