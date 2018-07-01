@@ -11,7 +11,7 @@ export default class App{
     }
     async fetchData(){
         try {
-            let images = await ApiService.send('/images?limit=20&offset=0&width=300', { method: 'GET' });
+            let images = await ApiService.send('/images?limit=20&offset=0&width=300&typeImg=progressive', { method: 'GET' });
             this.wall.addImages(images);
         } catch (e) {
 

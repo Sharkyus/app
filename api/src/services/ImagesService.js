@@ -13,13 +13,13 @@ class ImagesService{
         app.get('/api/images', async(req, res)=>{
             this.imagesBuffers = [];
 
-            let { limit, offset, width: imageWidth } = req.query;
+            let { limit, offset, width: imageWidth, typeImg } = req.query;
             let images = await Image.findAll({ limit: Number(limit), offset: Number(offset), raw: true });
 
             let promises = [];
             images.forEach((image)=>{
                 image.url = `${req.protocol}://${req.get('host')}/${image.name}`;
-                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth));
+                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth), typeImg === "progressive");
                 processPromise.then((buffer)=>{
                     this.imagesBuffers[image.name] = buffer;
                 });
@@ -35,11 +35,11 @@ class ImagesService{
             delete this.imagesBuffers[req.params.image];
         });
     }
-    createTempImage(src, width){
+    createTempImage(src, width, progressive){
         // let imageName = path.basename(src);
         // return sharp(src).resize(width).toFile(`${process.cwd()}/public/temp/${imageName}`);
 
-        return sharp(src).resize(width).toBuffer();
+        return sharp(src).resize(width).jpeg({ progressive }).toBuffer();
     }
 }
 
