@@ -1,0 +1,30 @@
+.controls-panel{
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  //width: 300px;
+  height: 70px;
+  background: rgba(0, 0, 0, .7);
+  border-top-left-radius: 10px;
+
+  &__rotate{
+    height: 100%;
+    float: left;
+    margin: 0 10px;
+    cursor: pointer;
+
+    &:hover{
+      svg{
+        fill: #b1b2ff;
+      }
+    }
+
+    svg{
+      position: relative;
+      top: 10%;
+      height: 80%;
+      fill: #fff;
+      transition: fill .3s;
+    }
+  }
+}

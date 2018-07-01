@@ -11,4 +11,7 @@ export default class Wall extends BaseComponent {
             new ImageThumb({ renderTo: this.$el, data: img });
         });
     }
+    getSelectedImages(){
+
+    }
 }
