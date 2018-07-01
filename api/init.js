@@ -23,12 +23,12 @@ const download = (uri, path)=>{
 };
 
 
-const createThumbs = (src, sizes) => {
-    sizes.forEach((width)=>{
-        let pathToFolder = createFolder(`thumb_${width}`);
-        sharp(src).resize(width).toFile(`${pathToFolder}/${path.basename(src)}`);
-    });
-};
+// const createThumbs = (src, sizes) => {
+//     sizes.forEach((width)=>{
+//         let pathToFolder = createFolder(`thumb_${width}`);
+//         sharp(src).resize(width).toFile(`${pathToFolder}/${path.basename(src)}`);
+//     });
+// };
 
 const createFolder = (name) => {
     let folderPath = `${process.cwd()}/public/${name}`;
@@ -41,7 +41,7 @@ const createFolder = (name) => {
 
 let { Image } = require('./src/models');
 const startDownload = async() => {
-    createFolder('original');
+    let imagesPath = createFolder('original');
 
     let i = 0;
     while(i < targetCount) {
@@ -52,14 +52,14 @@ const startDownload = async() => {
             let width = [1280,1100,900][getRandomInt(0,2)],
                 height = [900,740,600][getRandomInt(0,2)],
                 name = `${uuid()}.jpg`,
-                filePath = `${process.cwd()}/public/original/${name}`;
+                filePath = `${imagesPath}/${name}`;
 
             Image.create({ name, width, height, angle: 0 });
 
             let dlPromise = download(`https://picsum.photos/${width}/${height}/?random`, filePath);
-            dlPromise.then(()=>{
-                createThumbs(filePath, sizes);
-            });
+            // dlPromise.then(()=>{
+            //     createThumbs(filePath, sizes);
+            // });
             promises.push(dlPromise);
             i++;
 
