@@ -57,7 +57,7 @@ export default class App{
 
         if ((offsetHeight - (scrollTop + clientHeight)) < 300) {
             this.offset = this.limit + this.offset;
-            this.fetchData(this.limit, this.offset, 250);
+            this._fetchData(this.limit, this.offset, 250);
         }
     }
 }
