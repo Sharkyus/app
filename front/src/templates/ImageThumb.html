@@ -6,6 +6,7 @@
              c0.39,0.386,1.039,0.386,1.429,0L27.704,9.811C28.099,9.421,28.099,8.787,27.704,8.397C27.31,8.006,28.099,8.787,27.704,8.397z"></path>
         </svg>
     </div>
-    <div class="image-thumb__image" style="background-image: url('<%= url %>')" alt="<%= name %>" data-ref="bgImage"></div>
-    <img src="<%= url %>" data-ref="image" alt="" style="display: none">
+    <!--<div class="image-thumb__image" alt="<%= name %>" data-ref="bgImage"></div>-->
+    <img class="image-thumb__image" src="<%= url %>" alt="<%= name %>" crossOrigin="use-credentials" data-ref="image"/>
+    <img class="image-thumb__image-hidden" src="<%= url %>" alt="<%= name %>" style="display: none" crossOrigin="use-credentials" data-ref="imageHidden"/>
 </div>

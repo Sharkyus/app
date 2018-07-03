@@ -7,29 +7,27 @@ export default class ImageThumb extends BaseComponent{
         this.rotateDeg = 0;
     }
     rotate(deg){
-        let { image, bgImage } = this.$refs;
+        let { imageHidden, image } = this.$refs;
         this.rotateDeg += deg;
 
         let canvas = document.createElement('canvas');
 
-        let { width: newWidth, height: newHeight } = this._rotateBox(this.rotateDeg, image.naturalWidth, image.naturalHeight);
+        let { width: newWidth, height: newHeight } = this._rotateBox(this.rotateDeg, imageHidden.naturalWidth, imageHidden.naturalHeight);
         canvas.width = newWidth;
         canvas.height = newHeight;
 
-        console.log(newWidth, newHeight)
+        console.log(newWidth, newHeight,imageHidden.naturalWidth/2, imageHidden.naturalHeight/2)
 
         let ctx = canvas.getContext('2d');
         ctx.save();
         ctx.translate(newWidth/2, newHeight/2);
         ctx.rotate(this._toRad(this.rotateDeg));
-        ctx.drawImage(image, -newWidth/2, -newHeight/2);
+        ctx.drawImage(imageHidden, -imageHidden.naturalWidth/2, -imageHidden.naturalHeight/2);
 
         ctx.restore();
 
         canvas.toBlob((blob)=>{
-            let rotatedImageURL = URL.createObjectURL(blob);
-            // image.src = rotatedImageURL;
-            bgImage.style.backgroundImage = `url(${rotatedImageURL})`;
+            image.src = URL.createObjectURL(blob);
         },'image/jpeg');
     }
     _rotateBox(deg, width, height){
