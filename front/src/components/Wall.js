@@ -5,13 +5,26 @@ import template from "~/Wall.html";
 export default class Wall extends BaseComponent {
     constructor(options = {}){
         super({ ...options, template });
+        this.thumbs = [];
+        this.selectedThumbs = [];
     }
     addImages(images){
         images.forEach((img)=>{
-            new ImageThumb({ renderTo: this.$el, data: img });
+            let thumb = new ImageThumb({ renderTo: this.$el, data: img });
+            thumb.on('toggle-select', ::this._onThumbToggleSelect);
+            this.thumbs.push(thumb);
         });
     }
-    getSelectedImages(){
+    rotateSelectedImages(deg){
+        this.selectedThumbs.forEach((thumb)=>{
+            thumb.rotate(deg);
+        });
+    }
+    _onThumbToggleSelect(thumb, selected){
+        if (selected){
+            return this.selectedThumbs.push(thumb);
+        }
 
+        this.selectedThumbs.splice(this.selectedThumbs.indexOf(thumb), 1);
     }
 }

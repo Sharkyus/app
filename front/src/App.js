@@ -45,10 +45,10 @@ export default class App{
 
     }
     _onRotateRight(){
-        alert('rotate left');
+        this.wall.rotateSelectedImages(90);
     }
     _onRotateLeft(){
-        alert('rotate right');
+        this.wall.rotateSelectedImages(-90);
     }
     _onScroll(e){
         if (this.endReached || this.loadingImages) return;
