@@ -16,14 +16,11 @@ export default class ImageThumb extends BaseComponent{
         canvas.width = newWidth;
         canvas.height = newHeight;
 
-        console.log(newWidth, newHeight,imageHidden.naturalWidth/2, imageHidden.naturalHeight/2)
-
         let ctx = canvas.getContext('2d');
         ctx.save();
         ctx.translate(newWidth/2, newHeight/2);
         ctx.rotate(this._toRad(this.rotateDeg));
         ctx.drawImage(imageHidden, -imageHidden.naturalWidth/2, -imageHidden.naturalHeight/2);
-
         ctx.restore();
 
         canvas.toBlob((blob)=>{

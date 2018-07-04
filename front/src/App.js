@@ -34,8 +34,8 @@ export default class App{
         }
     }
     _bindEvents(){
-        this.controlsPanel.on('rotate:left', ::this._onRotateLeft);
-        this.controlsPanel.on('rotate:right', ::this._onRotateRight);
+        this.controlsPanel.on('rotate:left', this._onClickRotate.bind(this, -90));
+        this.controlsPanel.on('rotate:right', this._onClickRotate.bind(this, 90));
         window.addEventListener('scroll', ::this._onScroll);
     }
     _getDevicePixelRatio(){
@@ -44,11 +44,12 @@ export default class App{
     _isMobile(){
 
     }
-    _onRotateRight(){
-        this.wall.rotateSelectedImages(90);
-    }
-    _onRotateLeft(){
-        this.wall.rotateSelectedImages(-90);
+    _onClickRotate(deg){
+        if (this.wall.hasSelectedImages()){
+            return this.wall.rotateSelectedThumbs(deg);
+        }
+
+        return this.wall.rotateAllThumbs(deg);
     }
     _onScroll(e){
         if (this.endReached || this.loadingImages) return;

@@ -15,10 +15,18 @@ export default class Wall extends BaseComponent {
             this.thumbs.push(thumb);
         });
     }
-    rotateSelectedImages(deg){
+    rotateSelectedThumbs(deg){
         this.selectedThumbs.forEach((thumb)=>{
             thumb.rotate(deg);
         });
+    }
+    rotateAllThumbs(deg){
+        this.thumbs.forEach((thumb)=>{
+            thumb.rotate(deg);
+        });
+    }
+    hasSelectedImages(){
+        return !!this.selectedThumbs.length;
     }
     _onThumbToggleSelect(thumb, selected){
         if (selected){
