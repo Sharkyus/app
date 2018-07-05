@@ -5,10 +5,15 @@ export default class ImageThumb extends BaseComponent{
     constructor(options = {}){
         super({ ...options, template });
         this.rotateDeg = 0;
+        this.rotateOnShow = false;
     }
     rotate(deg){
         let { imageHidden, image } = this.$refs;
         this.rotateDeg += deg;
+
+        if (!this._isScrolledIntoView()){
+            return this.rotateOnShow = true;
+        }
 
         let canvas = document.createElement('canvas');
 
@@ -26,6 +31,11 @@ export default class ImageThumb extends BaseComponent{
         canvas.toBlob((blob)=>{
             image.src = URL.createObjectURL(blob);
         },'image/jpeg');
+    }
+
+    _isScrolledIntoView() {
+        let { top, bottom } = this.$el.getBoundingClientRect();
+        return (top < window.innerHeight + 200) && (bottom >= -200);
     }
     _rotateBox(deg, width, height){
         let newWidth = (width - Math.abs(Math.sin(this._toRad(deg)) * (width-height))).toFixed(0);
