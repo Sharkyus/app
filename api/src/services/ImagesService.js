@@ -29,7 +29,6 @@ class ImagesService{
         });
 
         app.get('/:image([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}.jpg)', (req, res)=>{
-            console.log(req.params.image);
             res.send(this.imagesBuffers[req.params.image]);
             delete this.imagesBuffers[req.params.image];
         });
