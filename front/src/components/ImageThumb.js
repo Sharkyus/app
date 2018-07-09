@@ -1,6 +1,5 @@
 import BaseComponent from "@/components/common/BaseComponent";
 import template from  "~/ImageThumb.html";
-import EXIF from "exif-js";
 
 export default class ImageThumb extends BaseComponent{
     constructor(options = {}) {
@@ -9,6 +8,7 @@ export default class ImageThumb extends BaseComponent{
         this.dbRelativeRotate = 0;
 
         this.$refs.image.onload=()=>{
+            this.$el.classList.remove('loading');
             this.updateImageSize();
         }
     }
@@ -27,6 +27,7 @@ export default class ImageThumb extends BaseComponent{
     }
     updateImageSize(){
         let { image } = this.$refs;
+
         let {width, height} = this.$el.getBoundingClientRect();
         if (image.naturalWidth > image.naturalHeight){
             image.style.width = Math.min(width, height) + 'px';

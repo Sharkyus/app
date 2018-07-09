@@ -10,11 +10,14 @@
   background: #f9fbe7;
   height: 250px;
   margin:  20px .325%;
-  //border: 1px solid black;
   box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  //transition: background .3s;
-  //will-change: background;
+
+  &.loading{
+    .image-thumb__image{
+      visibility: hidden;
+    }
+  }
 
   &_selected{
     background: #a5d6a7;
@@ -39,14 +42,11 @@
 
   &__image{
     display: inline-block;
-    //width: 250px;
-    //height: 250px;
     max-height: 100%;
     max-width: 100%;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
-    //height: 3;
   }
 
   &__check{
@@ -55,8 +55,6 @@
     top: 0;
     left: 0;
     opacity: 0;
-    //will-change: opacity;
-    //transition: opacity .3s;
 
     svg{
       fill: #43a047;
@@ -74,6 +72,7 @@
 @media screen and (max-width: @media-medium){
   .image-thumb{
     width: 48%;
-    margin:  20px 1%;
+    height: 210px;
+    margin: 20px 1%;
   }
 }

@@ -2,8 +2,14 @@
 @import "common/variables";
 @import "components/main";
 
+html, body{
+  position: relative;
+  overflow-x: hidden;
+}
+
 #app{
   backface-visibility: visible;
+
 
   &.optimize-thumbs-rotate{
     .image-thumb__image{
