@@ -20,7 +20,7 @@ export default class ApiService{
     static send(url, options={}, data={}) {
         return new Promise((res, rej) => {
             let req = ApiService._getXmlHttp();
-            req.open(options.method, `${location.protocol}//${location.hostname}:${config.port}/api${url}`, true);
+            req.open(options.method, `${config.apiServerHost || location.hostname}:${config.apiServerPort}/api${url}`, true);
             req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
             req.onreadystatechange = () => {
                 if (req.readyState === 4) {
