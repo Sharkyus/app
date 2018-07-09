@@ -2,6 +2,7 @@ let fs = require('fs'),
     request = require('request'),
     uuid = require('uuid'),
     { Image, sequelize } = require('./src/models'),
+    path = require('path');
 
     initDbSql = fs.readFileSync(`${process.cwd()}/migrations/init.sql`).toString(),
     config = require(`${process.cwd()}/config/dev.json`),
@@ -46,17 +47,22 @@ const download = (uri, path)=>{
 };
 
 const createFolder = (name) => {
-    let folderPath = `${process.cwd()}/public/${name}`;
-    if (!fs.existsSync(folderPath)){
-        fs.mkdirSync(folderPath);
-    }
-    return folderPath;
+    let directories = name.split('/'),
+        curDir = process.cwd();
+
+    directories.forEach((dir)=>{
+        curDir = path.join(curDir, dir);
+        if (!fs.existsSync(curDir)){
+            fs.mkdirSync(curDir);
+        }
+    });
+    return curDir;
 };
 
 
 const startDownload = () => {
     return new Promise(async(res)=>{
-        let imagesPath = createFolder('original');
+        let imagesPath = createFolder('public/original');
 
         let i = 0;
         while(i < targetImagesCount) {
