@@ -4,13 +4,7 @@ module.exports = function(sequelize, DataTypes) {
         name: {
             type: Sequelize.STRING
         },
-        width: {
-            type: Sequelize.INTEGER
-        },
-        height: {
-            type: Sequelize.INTEGER
-        },
-        angle: {
+        rotate: {
             type: Sequelize.INTEGER
         },
 

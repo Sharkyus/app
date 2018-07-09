@@ -1,14 +1,37 @@
 let fs = require('fs'),
-    path = require('path'),
     request = require('request'),
     uuid = require('uuid'),
-    sharp = require('sharp'),
+    { Image, sequelize } = require('./src/models'),
 
-    targetCount = 100,
-    downloadedCountPerIteration = 30,
-    sizes = [800, 600];
+    initDbSql = fs.readFileSync(`${process.cwd()}/migrations/init.sql`).toString(),
+    config = require(`${process.cwd()}/config/dev.json`),
+    targetImagesCount = config.initialImagesCount,
+    downloadedCountPerIteration = 30;
 
 
+/////////// CHECK CONNECTION AND START ///////////
+
+sequelize
+    .authenticate()
+    .then(async() => {
+        console.log('Connection has been established successfully.');
+
+        await applyMigrations();
+
+        console.log('Migrations applied');
+        console.log('Start fill database');
+
+        await startDownload();
+
+        console.log('Init completed');
+
+        process.exit();
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
+
+/////////////////////////////////////////////////////
 
 const getRandomInt = (min, max)=>{
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -22,14 +45,6 @@ const download = (uri, path)=>{
     });
 };
 
-
-// const createThumbs = (src, sizes) => {
-//     sizes.forEach((width)=>{
-//         let pathToFolder = createFolder(`thumb_${width}`);
-//         sharp(src).resize(width).toFile(`${pathToFolder}/${path.basename(src)}`);
-//     });
-// };
-
 const createFolder = (name) => {
     let folderPath = `${process.cwd()}/public/${name}`;
     if (!fs.existsSync(folderPath)){
@@ -39,36 +54,39 @@ const createFolder = (name) => {
 };
 
 
-let { Image } = require('./src/models');
-const startDownload = async() => {
-    let imagesPath = createFolder('original');
+const startDownload = () => {
+    return new Promise(async(res)=>{
+        let imagesPath = createFolder('original');
 
-    let i = 0;
-    while(i < targetCount) {
-        let promises = [];
+        let i = 0;
+        while(i < targetImagesCount) {
+            let promises = [];
 
-        for(let j = 0; j < downloadedCountPerIteration; j++) {
+            for(let j = 0; j < downloadedCountPerIteration; j++) {
 
-            let width = [1280,1100,900][getRandomInt(0,2)],
-                height = [900,740,600][getRandomInt(0,2)],
-                name = `${uuid()}.jpg`,
-                filePath = `${imagesPath}/${name}`;
+                let width = [1280,1100,900][getRandomInt(0,2)],
+                    height = [900,740,600][getRandomInt(0,2)],
+                    name = `${uuid()}.jpg`,
+                    filePath = `${imagesPath}/${name}`;
 
-            Image.create({ name, width, height, angle: 0 });
+                Image.create({ name, rotate: 0 });
 
-            let dlPromise = download(`https://picsum.photos/${width}/${height}/?random`, filePath);
-            // dlPromise.then(()=>{
-            //     createThumbs(filePath, sizes);
-            // });
-            promises.push(dlPromise);
-            i++;
+                let dlPromise = download(`https://picsum.photos/${width}/${height}/?random`, filePath);
+                promises.push(dlPromise);
+                i++;
 
-            if (i === targetCount) break;
+                if (i === targetImagesCount) break;
+            }
+
+            await Promise.all(promises);
+            console.log(`Downloaded images count ${i}`);
+            if (i === targetImagesCount) {
+                res();
+            }
         }
-
-        await Promise.all(promises);
-        console.log(`Downloaded count ${i}`);
-    }
+    });
 };
 
-startDownload();
+const applyMigrations = () => {
+    return sequelize.query(initDbSql);
+};

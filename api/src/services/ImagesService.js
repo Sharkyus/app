@@ -12,12 +12,12 @@ class ImagesService{
             this.imagesBuffers = [];
 
             let { limit, offset, width: imageWidth, typeImg } = req.query;
-            let images = await Image.findAll({ limit: Number(limit), offset: Number(offset), raw: true });
+            let images = await Image.findAll({ limit: Number(limit), offset: Number(offset), raw: true, fields: ['id', 'name'] });
 
             let promises = [];
             images.forEach((image)=>{
                 image.url = `${req.protocol}://${req.get('host')}/${image.name}`;
-                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth), image.angle, typeImg === "progressive");
+                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth), image.rotate, typeImg === "progressive");
                 processPromise.then((buffer)=>{
                     this.imagesBuffers[image.name] = buffer;
                 });
@@ -40,17 +40,17 @@ class ImagesService{
 
             items.forEach((img)=>{
                 if (!(_.isNumber(img.id) && _.isNumber(img.rotate))) return;
-                casesList.push(`WHEN ${img.id} THEN (360+(\`angle\`+${img.rotate}))%360`);
+                casesList.push(`WHEN ${img.id} THEN (360+(\`rotate\`+${img.rotate}))%360`);
             });
 
             try {
                 await sequelize.query(
-                    `UPDATE \`image\` SET \`angle\`= ( CASE id ${casesList.join(' ')} END ) WHERE id IN (?)`,
+                    `UPDATE \`image\` SET \`rotate\`= ( CASE id ${casesList.join(' ')} END ) WHERE id IN (?)`,
                     { replacements: [imgIds], type: sequelize.QueryTypes.UPDATE }
                 );
                 if (globalRotate) {
                     await sequelize.query(
-                        'UPDATE `image` SET `angle`=`angle`+? WHERE id NOT IN (?)',
+                        'UPDATE `image` SET `rotate`=`rotate`+? WHERE id NOT IN (?)',
                         { replacements: [globalRotate, imgIds], type: sequelize.QueryTypes.UPDATE }
                     );
                 }
