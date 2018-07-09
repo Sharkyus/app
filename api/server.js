@@ -2,6 +2,7 @@ let express = require('express');
 let http = require('http');
 let config = require('./config/dev');
 let services = require('./src/services');
+let bodyParser = require('body-parser');
 
 process.setMaxListeners(0);
 
@@ -32,7 +33,7 @@ class Server{
             }
         });
 
-        // app.use(express.static('public/temp'));
+        app.use(bodyParser.json());
 
         return app;
     }

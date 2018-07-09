@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
     let Sequelize = require('sequelize');
-    let Image = sequelize.define('Image', {
+    return sequelize.define('Image', {
         name: {
             type: Sequelize.STRING
         },
@@ -18,6 +18,4 @@ module.exports = function(sequelize, DataTypes) {
         tableName: 'image',
         timestamps: false
     });
-
-    return Image;
 };

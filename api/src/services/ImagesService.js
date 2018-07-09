@@ -2,10 +2,8 @@
  * Created by sharkyus on 2/1/2017.
  */
 
-let { Image } = require(`${process.cwd()}/src/models`),
+let { Image, sequelize } = require(`${process.cwd()}/src/models`),
     sharp = require('sharp'),
-    fs = require('fs'),
-    path = require('path'),
     _ = require('lodash');
 
 class ImagesService{
@@ -19,7 +17,7 @@ class ImagesService{
             let promises = [];
             images.forEach((image)=>{
                 image.url = `${req.protocol}://${req.get('host')}/${image.name}`;
-                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth), typeImg === "progressive");
+                let processPromise = this.createTempImage(`${process.cwd()}/public/original/${image.name}`, Number(imageWidth), image.angle, typeImg === "progressive");
                 processPromise.then((buffer)=>{
                     this.imagesBuffers[image.name] = buffer;
                 });
@@ -34,12 +32,42 @@ class ImagesService{
             res.send(this.imagesBuffers[req.params.image]);
             delete this.imagesBuffers[req.params.image];
         });
-    }
-    createTempImage(src, width, progressive){
-        // let imageName = path.basename(src);
-        // return sharp(src).resize(width).toFile(`${process.cwd()}/public/temp/${imageName}`);
 
-        return sharp(src).resize(width).jpeg({ progressive }).toBuffer();
+        app.put('/api/images', async(req, res)=>{
+            let { items, globalRotate } = req.body;
+            let imgIds = items.map(img=>img.id);
+            let casesList = [];
+
+            items.forEach((img)=>{
+                if (!(_.isNumber(img.id) && _.isNumber(img.rotate))) return;
+                casesList.push(`WHEN ${img.id} THEN (360+(\`angle\`+${img.rotate}))%360`);
+            });
+
+            try {
+                await sequelize.query(
+                    `UPDATE \`image\` SET \`angle\`= ( CASE id ${casesList.join(' ')} END ) WHERE id IN (?)`,
+                    { replacements: [imgIds], type: sequelize.QueryTypes.UPDATE }
+                );
+                if (globalRotate) {
+                    await sequelize.query(
+                        'UPDATE `image` SET `angle`=`angle`+? WHERE id NOT IN (?)',
+                        { replacements: [globalRotate, imgIds], type: sequelize.QueryTypes.UPDATE }
+                    );
+                }
+            } catch (e) {
+                res.send(false);
+            }
+            res.send(true);
+        });
+    }
+    async createTempImage(src, size, angle, progressive){
+        let image = sharp(src);
+        await image.rotate(angle);
+        let imageBuffer = await image.toBuffer(),
+            rotatedImage = sharp(imageBuffer),
+            { width, height } = await rotatedImage.metadata();
+        await rotatedImage.resize(width > height ? size : null, width <= height ? size : null);
+        return rotatedImage.jpeg({ progressive }).toBuffer();
     }
 }
 

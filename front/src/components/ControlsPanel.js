@@ -8,7 +8,10 @@ export default class ControlsPanel extends BaseComponent {
     _bindEvents(){
         let { rotateLeft, rotateRight } = this.$refs;
 
-        rotateLeft.addEventListener('click', ()=>{ this.emit('rotate:left') });
-        rotateRight.addEventListener('click', ()=>{ this.emit('rotate:right') });
+        rotateLeft.addEventListener('click', ()=>{ this.emit('rotate-left') });
+        rotateRight.addEventListener('click', ()=>{ this.emit('rotate-right') });
+
+        this.$el.addEventListener('mouseenter', ()=>{ this.emit('prepare-click') });
+        this.$el.addEventListener('touchstart', ()=>{ this.emit('prepare-click') });
     }
 }

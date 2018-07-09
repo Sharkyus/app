@@ -10,10 +10,11 @@
   background: #f9fbe7;
   height: 250px;
   margin:  20px .325%;
-  border: 1px solid black;
+  //border: 1px solid black;
   box-shadow: 10px 10px 10px 0 rgba(0, 0, 0, 0.2);
   cursor: pointer;
-  transition: background .3s;
+  //transition: background .3s;
+  //will-change: background;
 
   &_selected{
     background: #a5d6a7;
@@ -29,11 +30,17 @@
 
   &:hover{
     background: #f4f6e2;
+    will-change: background;
+
+    .image-thumb__check{
+      will-change: opacity;
+    }
   }
 
   &__image{
     display: inline-block;
-    max-width: 250px;
+    //width: 250px;
+    //height: 250px;
     max-height: 100%;
     max-width: 100%;
     background-repeat: no-repeat;
@@ -48,7 +55,8 @@
     top: 0;
     left: 0;
     opacity: 0;
-    transition: opacity .3s;
+    //will-change: opacity;
+    //transition: opacity .3s;
 
     svg{
       fill: #43a047;

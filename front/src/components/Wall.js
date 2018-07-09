@@ -5,6 +5,7 @@ import template from "~/Wall.html";
 export default class Wall extends BaseComponent {
     constructor(options = {}){
         super({ ...options, template });
+        this.globalRotate = 0;
         this.thumbs = [];
         this.selectedThumbs = [];
     }
@@ -15,18 +16,35 @@ export default class Wall extends BaseComponent {
             this.thumbs.push(thumb);
         });
     }
+    getRotatedImagesData(){
+        return this.thumbs.filter(tb=>tb.getRotateAngle())
+                          .map(tb=>({ id: tb.data.id, rotate: tb.getRotateAngle() }));
+    }
     rotateSelectedThumbs(deg){
         this.selectedThumbs.forEach((thumb)=>{
             thumb.rotate(deg);
         });
     }
     rotateAllThumbs(deg){
+        this.globalRotate = (360 + this.globalRotate + deg) % 360;
         this.thumbs.forEach((thumb)=>{
             thumb.rotate(deg);
         });
     }
+    getGlobalRotate(){
+        return this.globalRotate;
+    }
+    resetRotations(){
+        this.globalRotate = 0;
+        this.thumbs.filter(tb=>tb.resetRotate())
+    }
     hasSelectedImages(){
         return !!this.selectedThumbs.length;
+    }
+    updateImagesSizes(){
+        this.thumbs.forEach((tb)=>{
+            tb.updateImageSize();
+        });
     }
     _onThumbToggleSelect(thumb, selected){
         if (selected){

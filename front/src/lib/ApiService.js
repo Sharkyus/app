@@ -21,14 +21,16 @@ export default class ApiService{
         return new Promise((res, rej) => {
             let req = ApiService._getXmlHttp();
             req.open(options.method, `${location.protocol}//${location.hostname}:${config.port}/api${url}`, true);
+            req.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
             req.onreadystatechange = () => {
                 if (req.readyState === 4) {
                     if (req.status === 200) {
-                        res(JSON.parse(req.responseText));
+                        return res(JSON.parse(req.responseText));
                     }
+                    rej();
                 }
             };
-            req.send(data);
+            req.send(JSON.stringify(data));
         });
     }
 }

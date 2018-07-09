@@ -1,6 +1,6 @@
 import Wall from "@/components/Wall";
 import ControlsPanel from "@/components/ControlsPanel";
-
+import _ from 'lodash';
 import ApiService from "@/lib/ApiService";
 import "styles/app.less";
 
@@ -15,9 +15,9 @@ export default class App{
         this.wall = new Wall({ renderTo: this.$el });
         this.controlsPanel = new ControlsPanel({ renderTo: this.$el });
 
+        this._flushRotationsDataDebounce = _.debounce(this._flushRotationsData, 500);
 
         this._bindEvents();
-
         this._fetchData(this.limit, this.offset, this._getThumbSize());
     }
     async _fetchData(limit, offset, imageWidth, renderType = "progressive"){
@@ -30,8 +30,11 @@ export default class App{
             this.endReached = images.length < limit;
             this.loadingImages = false;
         } catch (e) {
-
+            alert("Fetch error");
         }
+    }
+    _updateImagesRotations(data){
+        return ApiService.send(`/images`, { method: 'PUT' }, data);
     }
     _getThumbSize(){
         if (this._isMobileOrTablet()) {
@@ -46,7 +49,7 @@ export default class App{
     _getThumbsCountInLine(size){
         switch(true){
             case size < 768: return 2;
-            case size > 768 && size < 1300: return 3;
+            case size > 768 && size < 1300: return 4;
             default: return 6;
         }
     }
@@ -56,28 +59,64 @@ export default class App{
         return check;
     }
     _bindEvents(){
-        this.controlsPanel.on('rotate:left', this._onClickRotate.bind(this, -90));
-        this.controlsPanel.on('rotate:right', this._onClickRotate.bind(this, 90));
+        this.controlsPanel.on('rotate-left', this._onClickRotate.bind(this, -90));
+        this.controlsPanel.on('rotate-right', this._onClickRotate.bind(this, 90));
+
+        if (this._isMobileOrTablet()){
+            this.wall.$el.addEventListener('touchstart', ::this._discardThumbsOptimization);
+        } else {
+            this.wall.$el.addEventListener('mousedown', ::this._discardThumbsOptimization);
+        }
+        this.controlsPanel.on('prepare-click', ::this._optimizeThumbsRotate);
+        this.controlsPanel.on('prepare-click-discard', ::this._discardThumbsOptimization);
+
         window.addEventListener('scroll', ::this._onScroll);
+        window.addEventListener('resize', ::this._onWindowResize);
     }
     _getDevicePixelRatio(){
         return window.devicePixelRatio || window.screen.deviceXDPI / window.screen.logicalXDPI;
     }
-    _onClickRotate(deg){
+    _flushRotationsData(){
+        let rotatedImagesData = this.wall.getRotatedImagesData();
+        let globalRotate = this.wall.getGlobalRotate();
+        if (rotatedImagesData.length) {
+            this._updateImagesRotations({ items: rotatedImagesData, globalRotate});
+            this.wall.resetRotations();
+        }
+    }
+    async _onClickRotate(deg){
         if (this.wall.hasSelectedImages()){
-            return this.wall.rotateSelectedThumbs(deg);
+            this.wall.rotateSelectedThumbs(deg);
+        } else {
+            this.wall.rotateAllThumbs(deg);
         }
 
-        return this.wall.rotateAllThumbs(deg);
+        this._flushRotationsDataDebounce();
     }
     _onScroll(e){
+        this._checkNextFetch(e);
+        if (this.rotateThubmsOptimized) {
+            this._discardThumbsOptimization();
+        }
+    }
+    _optimizeThumbsRotate(){
+        this.rotateThubmsOptimized = true;
+        this.$el.classList.add('optimize-thumbs-rotate');
+    }
+    _discardThumbsOptimization(){
+        this.rotateThubmsOptimized = false;
+        this.$el.classList.remove('optimize-thumbs-rotate');
+    }
+    _checkNextFetch(e){
         if (this.endReached || this.loadingImages) return;
-
         let { offsetHeight, scrollTop, clientHeight } = e.target.scrollingElement;
 
         if ((offsetHeight - (scrollTop + clientHeight)) < 300) {
             this.offset = this.limit + this.offset;
             this._fetchData(this.limit, this.offset, this._getThumbSize());
         }
+    }
+    _onWindowResize(){
+        this.wall.updateImagesSizes();
     }
 }
