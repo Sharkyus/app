@@ -1,6 +1,6 @@
 module.exports = function(sequelize, DataTypes) {
     let Sequelize = require('sequelize');
-    return sequelize.define('Image', {
+    let Image = sequelize.define('Image', {
         name: {
             type: Sequelize.STRING
         },
@@ -12,4 +12,10 @@ module.exports = function(sequelize, DataTypes) {
         tableName: 'image',
         timestamps: false
     });
+
+    Image.findByName=(name)=>{
+        return Image.findOne({ where: { name } });
+    };
+
+    return Image;
 };
