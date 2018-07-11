@@ -49,7 +49,8 @@ export default class App{
     _getThumbsCountInLine(size){
         switch(true){
             case size <= 411: return 2;
-            case size > 411 && size <= 767: return 6;
+            case size > 411 && size <= 767 && window.innerWidth > window.innerHeight: return 6;
+            case size > 411 && size <= 767 && window.innerWidth < window.innerHeight: return 4;
             case size > 767 && size <= 1023: return 4;
             default: return 6;
         }
