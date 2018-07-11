@@ -4,6 +4,6 @@
     "password": "h4sQu94MNEhnsewS",
     "name": "app_thumbs"
   },
-  "port": null,
+  "port": 8082,
   "initialImagesCount": 1000
 }
