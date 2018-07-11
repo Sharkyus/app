@@ -70,14 +70,22 @@
 @media screen and (min-width: @media-medium) and (max-width: @media-big){
   .image-thumb{
     width: 24%;
-    margin:  20px .5%;
+    margin: 20px .5%;
   }
 }
 
-@media screen and (min-width: @media-small) and (max-width: @media-medium){
+@media screen and (min-width: @media-small) and (max-width: @media-medium) and (orientation: landscape){
   .image-thumb{
     height: 100px;
     margin: 15px .325%;
+  }
+}
+
+@media screen and (min-width: @media-small) and (max-width: @media-medium) and (orientation: portrait){
+  .image-thumb{
+    width: 24%;
+    height: 180px;
+    margin: 20px .5%;
   }
 }
 

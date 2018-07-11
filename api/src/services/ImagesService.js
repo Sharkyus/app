@@ -76,7 +76,7 @@ class ImagesService{
             { width, height } = await rotatedImage.metadata();
 
         if (size && size > 0) {
-            await rotatedImage.resize(width > height ? size : null, width <= height ? size : null);
+            await rotatedImage.resize(width > height ? Number(size.toFixed()) : null, width <= height ? Number(size.toFixed()) : null);
         }
         return rotatedImage.jpeg({ progressive }).toBuffer();
     }
