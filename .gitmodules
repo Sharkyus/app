@@ -1,0 +1,3 @@
+[submodule "app-thumbs-server"]
+	path = app-thumbs-server
+	url = https://github.com/Sharkyus/app-thumbs-server.git
