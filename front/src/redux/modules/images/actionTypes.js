@@ -1,2 +1,2 @@
-export const IMAGES_FETCH = "IMAGES_FETCH";
-export const IMAGES_ROTATE = "IMAGES_ROTATE";
+export const IMAGES_FETCH_START = "IMAGES_FETCH_START";
+export const IMAGES_ADD = "IMAGES_ADD";

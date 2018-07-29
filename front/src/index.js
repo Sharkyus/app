@@ -4,9 +4,11 @@ import App from './App';
 import { createBrowserHistory } from 'history';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
+import thunkMiddleware from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import rootReducer from './redux/rootReducer';
+
 
 const history = createBrowserHistory();
 
@@ -14,8 +16,9 @@ const store = createStore(
     connectRouter(history)(rootReducer),
     compose(
         applyMiddleware(
+            thunkMiddleware,
             routerMiddleware(history)
-        ),
+        )
     )
 );
 

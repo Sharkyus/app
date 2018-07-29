@@ -17,7 +17,6 @@ module.exports = {
         modules: [path.join(process.cwd(), 'src'), path.join(process.cwd(), 'config'), 'node_modules'],
         alias: {
             '@': path.resolve(process.cwd(), "src"),
-            '~': path.resolve(process.cwd(), "src/templates"),
             '#': path.resolve(process.cwd(), "config")
         }
     },
