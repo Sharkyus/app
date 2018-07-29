@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchImages, updateImagesRotations } from "./redux/modules/images/actions";
+import { fetchImages, updateImagesRotations, resetRotations,
+    toggleSelectImage, rotateSelectedImages, rotateAllImages } from "@/redux/modules/images/actions";
 import _ from 'lodash';
 import Wall from '@/components/Wall';
 import ControlsPanel from '@/components/ControlsPanel';
@@ -10,7 +11,8 @@ import '@/styles/app';
 
 @connect((state)=>{
     return state.images;
-}, { fetchImages, updateImagesRotations })
+}, { fetchImages, updateImagesRotations, resetRotations,
+    toggleSelectImage, rotateSelectedImages, rotateAllImages })
 
 export default class App extends React.Component{
     constructor() {
@@ -65,22 +67,25 @@ export default class App extends React.Component{
         window.addEventListener('scroll', ::this._onScroll);
         window.addEventListener('resize', ::this._onWindowResize);
     }
+    _getRotatedImagesData(){
+        return this.props.images.filter(img=>img.dbRelativeRotate)
+            .map(img=>({ id: img.id, rotate: img.dbRelativeRotate }));
+    }
     _flushRotationsData(){
-        let { wall } = this.refs;
-        let rotatedImagesData = wall.getRotatedImagesData();
-        let globalRotate = wall.getGlobalRotate();
+        let rotatedImagesData = this._getRotatedImagesData();
+        let globalRotate = this.props.globalRotate;
         if (rotatedImagesData.length) {
             this._updateImagesRotations({ items: rotatedImagesData, globalRotate});
-            wall.resetRotations();
+            this.props.resetRotations();
         }
     }
     _onClickRotate(deg){
-        let { wall } = this.refs;
+        let { hasSelectedImages, rotateSelectedImages, rotateAllImages } = this.props;
 
-        if (wall.hasSelectedImages()){
-            wall.rotateSelectedThumbs(deg);
+        if (hasSelectedImages){
+            rotateSelectedImages(deg);
         } else {
-            wall.rotateAllThumbs(deg);
+            rotateAllImages(deg);
         }
 
         this._flushRotationsDataDebounce();
@@ -107,6 +112,9 @@ export default class App extends React.Component{
             this._fetchData(limit, offset, this._getThumbSize());
         }
     }
+    _onThumbToggleSelect(id, selected){
+        this.props.toggleSelectImage(id, selected);
+    }
     _onWindowResize(){
         this.refs.wall.updateImagesSizes();
     }
@@ -117,13 +125,13 @@ export default class App extends React.Component{
         let wallEvents = {
             [ Helpers.isMobileOrTablet() ? 'onTouchStart' : 'onMouseDown' ]: ::this._discardThumbsOptimization
         };
-
         let classes = classnames("app", { "app_optimize-thumbs-rotate": rotateThubmsOptimized });
 
         return (
             <div className={ classes }>
                 <Wall ref="wall"
                       images={ images }
+                      onThumbToggleSelect={ ::this._onThumbToggleSelect }
                       { ...wallEvents }
                 />
                 <ControlsPanel onRotateLeft={()=>{ this._onClickRotate(-90); }}

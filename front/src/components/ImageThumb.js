@@ -17,7 +17,6 @@ export default class ImageThumb extends React.Component{
     constructor(){
         super();
         this.state = this._getInitialState();
-        this.dbRelativeRotate = 0;
     }
     _getInitialState(){
         return {
@@ -27,19 +26,6 @@ export default class ImageThumb extends React.Component{
             rotateDeg: 0,
             selected: false
         }
-    }
-    rotate(deg = 0){
-        this.setState({
-            rotateDeg: Helpers.simplifyAngle(this.state.rotateDeg + deg)
-        });
-
-        this.dbRelativeRotate = Helpers.simplifyAngle(this.dbRelativeRotate + deg);
-    }
-    getRotateAngle(){
-        return this.dbRelativeRotate;
-    }
-    resetRotate(){
-        this.dbRelativeRotate = 0
     }
     updateImageSize(){
         let { image } = this.refs;
@@ -62,21 +48,20 @@ export default class ImageThumb extends React.Component{
         this.updateImageSize();
     }
     _onItemClick(){
-        let selected = !this.state.selected;
-        this.setState({ selected });
-        this.props.onToggleSelected(this, selected);
+        let { id, selected } = this.props.data;
+        this.props.onToggleSelected(id, !selected);
     }
     render(){
-        let { data } = this.props;
-        let { loaded, imageWidth, imageHeight, rotateDeg, selected } = this.state;
+        let { url, name, selected, rotateDeg } = this.props.data;
+        let { loaded, imageWidth, imageHeight } = this.state;
 
         let classes = classnames("image-thumb", { "loading": !loaded, "image-thumb_selected": selected });
 
         return (
             <div className={ classes } onClick={ ::this._onItemClick }>
                 <img className="image-thumb__image"
-                     src={ data.url }
-                     alt={ data.name }
+                     src={ url }
+                     alt={ name }
                      onLoad={ ::this._onImageLoaded }
                      style={{
                          width: imageWidth,

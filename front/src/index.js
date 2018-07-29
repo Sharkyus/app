@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import App from './App';
+import App from './containers/App';
 import { createBrowserHistory } from 'history';
 import { applyMiddleware, compose, createStore } from 'redux';
 import { connectRouter, routerMiddleware, ConnectedRouter } from 'connected-react-router';
@@ -8,7 +8,6 @@ import thunkMiddleware from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { Route, Switch } from 'react-router';
 import rootReducer from './redux/rootReducer';
-
 
 const history = createBrowserHistory();
 

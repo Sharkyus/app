@@ -22,8 +22,35 @@ export const addImages = (images) => {
     }
 };
 
+export const toggleSelectImage = (id, selected) => {
+    return {
+        type: actionType.IMAGES_TOGGLE_SELECT,
+        id, selected
+    }
+};
+
+export const rotateSelectedImages = (angle) => {
+    return {
+        type: actionType.IMAGES_ROTATE_SELECTED,
+        angle
+    }
+};
+
+export const rotateAllImages = (angle) => {
+    return {
+        type: actionType.IMAGES_ROTATE_ALL,
+        angle
+    }
+};
+
+export const resetRotations = () => {
+    return {
+        type: actionType.IMAGES_RESET_ROTATION
+    }
+};
+
 export const updateImagesRotations = (data) => {
-    return async function() {
+    return function(dispatch) {
         ApiService.send(`/images`, { method: 'PUT' }, data);
     }
 };
