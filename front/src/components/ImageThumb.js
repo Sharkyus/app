@@ -1,4 +1,5 @@
 import BaseComponent from "@/components/common/BaseComponent";
+import Helpers from "@/lib/Helpers";
 import template from  "~/ImageThumb.html";
 
 export default class ImageThumb extends BaseComponent{
@@ -14,8 +15,8 @@ export default class ImageThumb extends BaseComponent{
     }
     rotate(deg = 0){
         let { image } = this.$refs;
-        this.rotateDeg = (360 + this.rotateDeg + deg) % 360;
-        this.dbRelativeRotate = (360 + this.dbRelativeRotate + deg) % 360;
+        this.rotateDeg = Helpers.simplifyAngle(this.rotateDeg + deg);
+        this.dbRelativeRotate = Helpers.simplifyAngle(this.dbRelativeRotate + deg);
 
         image.style.transform = `rotate(${this.rotateDeg}deg)`;
     }

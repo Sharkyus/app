@@ -1,5 +1,6 @@
 import BaseComponent from "@/components/common/BaseComponent";
 import ImageThumb from "@/components/ImageThumb";
+import Helpers from "@/lib/Helpers";
 import template from "~/Wall.html";
 
 export default class Wall extends BaseComponent {
@@ -26,7 +27,7 @@ export default class Wall extends BaseComponent {
         });
     }
     rotateAllThumbs(deg){
-        this.globalRotate = (360 + this.globalRotate + deg) % 360;
+        this.globalRotate = Helpers.simplifyAngle(this.globalRotate + deg);
         this.thumbs.forEach((thumb)=>{
             thumb.rotate(deg);
         });
