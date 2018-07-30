@@ -20,7 +20,6 @@ module.exports = {
             '#': path.resolve(process.cwd(), "config")
         }
     },
-
     module: {
         rules: [
             {
@@ -29,7 +28,7 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['es2015', 'stage-0', 'react'],
+                        presets: ['es2015', 'stage-0'],
                         plugins: ['transform-decorators-legacy']
                     }
                 }
@@ -49,6 +48,12 @@ module.exports = {
                 }, {
                     loader: 'less-loader' // compiles Less to CSS
                 }]
+            },
+            {
+                test: /\.vue$/,
+                use: {
+                    loader: 'vue-loader',
+                }
             }
         ],
     }
