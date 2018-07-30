@@ -1,4 +1,5 @@
 const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
     context: path.join(process.cwd(), 'src'),
@@ -13,13 +14,17 @@ module.exports = {
         sourceMapFilename: '[name].map'
     },
     resolve: {
-        extensions: ['.js','.less','.css','.html','.json'],
+        extensions: ['.js','.less','.css','.html','.json','.vue'],
         modules: [path.join(process.cwd(), 'src'), path.join(process.cwd(), 'config'), 'node_modules'],
         alias: {
+            'vue$': 'vue/dist/vue.esm.js',
             '@': path.resolve(process.cwd(), "src"),
             '#': path.resolve(process.cwd(), "config")
         }
     },
+    plugins: [
+        new VueLoaderPlugin()
+    ],
     module: {
         rules: [
             {
