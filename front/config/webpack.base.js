@@ -14,7 +14,7 @@ module.exports = {
         sourceMapFilename: '[name].map'
     },
     resolve: {
-        extensions: ['.js','.less','.css','.html','.json','.vue'],
+        extensions: ['.js','.less','.json','.vue'],
         modules: [path.join(process.cwd(), 'src'), path.join(process.cwd(), 'config'), 'node_modules'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
@@ -36,12 +36,6 @@ module.exports = {
                         presets: ['es2015', 'stage-0'],
                         plugins: ['transform-decorators-legacy']
                     }
-                }
-            },
-            {
-                test: /\.html$/,
-                use: {
-                    loader: 'html-loader',
                 }
             },
             {
